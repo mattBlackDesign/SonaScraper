@@ -7,8 +7,8 @@ Web scrapper for automatically signing up to surveys on WLU Sona
 3. Install virtualenv & virtualenvwrapper http://docs.python-guide.org/en/latest/dev/virtualenvs/
 
 # Setup Virtual Environment
-1. mkvirtualenv sona
-2. workon sona
+1. `mkvirtualenv sona`
+2. `workon sona`
 
 # Installation
 1. `git clone git@github.com:mattBlackDesign/SonaScraper.git`

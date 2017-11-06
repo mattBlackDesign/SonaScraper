@@ -15,7 +15,8 @@ Web scrapper for automatically signing up to surveys on WLU Sona
 2. `cd SonaScraper`
 3. `cp sona_scraper/settings.default.py sona_scraper/settings.py`
 4. Edit settings.py
-5. `scrapy crawl sona`
+5. `pip install -r requirements.txt`
+6. `scrapy crawl sona`
 
 ### Learning Resources 
 https://doc.scrapy.org/en/latest/

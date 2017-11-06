@@ -45,6 +45,11 @@ class SonaSpider(scrapy.Spider):
         available = response.xpath('//tr[9]//a//@href').extract()
 
         if available:
+            yield Request('https://wlu-ls.sona-systems.com/' + available[0], callback=self.timeslot_sign_up)
+
+    def timeslot_sign_up(self,response):
+        button_text = response.xpath('//tr//td[3]//a/text()').extract()[0]
+        if button_text == 'Sign Up ':
             client = Client(twilio_sid, twilio_token)
 
             for phone_number in phone_numbers:
@@ -54,11 +59,9 @@ class SonaSpider(scrapy.Spider):
                     body="New assignment available"
                 )
 
-            yield Request('https://wlu-ls.sona-systems.com/' + available[0], callback=self.timeslot_sign_up)
+            sign_up_url = response.xpath('//tr//td[3]//a//@href').extract()[0]
 
-    def timeslot_sign_up(self,response):
-        sign_up_url = response.xpath('//tr//td[3]//a//@href').extract()[0]
-        yield Request('https://wlu-ls.sona-systems.com/' + sign_up_url, callback=self.sign_up_form)
+            yield Request('https://wlu-ls.sona-systems.com/' + sign_up_url, callback=self.sign_up_form)
 
     def sign_up_form(self,response):
         yield FormRequest.from_response(response,

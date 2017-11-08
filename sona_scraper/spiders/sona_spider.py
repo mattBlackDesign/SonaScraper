@@ -44,15 +44,18 @@ class SonaSpider(scrapy.Spider):
 
     def timeslots_for_study(self,response):
         abstract_text = response.xpath('//tr[5]//td[2]//span/text()').extract()[0]
-        available = response.xpath('//tr[9]//a//@href').extract()
+        available = response.xpath('//tr[position() = last()]//a//@href').extract()
 
         # Ensures that survey is available and it is a credit survey
         if available and '$' not in abstract_text:
+            open_in_browser(response)
+            print available[0]
             yield Request('https://wlu-ls.sona-systems.com/' + available[0], callback=self.timeslot_sign_up)
 
     def timeslot_sign_up(self,response):
+        open_in_browser(response)
         button_text = response.xpath('//tr//td[3]//a/text()').extract()[0]
-        
+
         if button_text == 'Sign Up ':
             client = Client(twilio_sid, twilio_token)
 

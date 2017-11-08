@@ -52,9 +52,8 @@ class SonaSpider(scrapy.Spider):
 
     def timeslot_sign_up(self,response):
         button_text = response.xpath('//tr//td[3]//a/text()').extract()[0]
+        
         if button_text == 'Sign Up ':
-            open_in_browser(response)
-
             client = Client(twilio_sid, twilio_token)
 
             for phone_number in phone_numbers:

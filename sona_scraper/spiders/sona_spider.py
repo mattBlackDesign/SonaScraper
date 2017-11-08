@@ -33,6 +33,7 @@ class SonaSpider(scrapy.Spider):
                                         formdata=formdata,
                                         clickdata={'name': 'ctl00$ContentPlaceHolder1$default_auth_button'},
                                         callback=self.view_available_studies)
+
     def view_available_studies(self, response):
         available_studies_url = 'https://wlu-ls.sona-systems.com/all_exp_participant.aspx'
         yield Request(available_studies_url, callback=self.timeslots_available)
@@ -42,14 +43,18 @@ class SonaSpider(scrapy.Spider):
             yield Request('https://wlu-ls.sona-systems.com/' + url, callback=self.timeslots_for_study)
 
     def timeslots_for_study(self,response):
+        abstract_text = response.xpath('//tr[5]//td[2]//span/text()').extract()[0]
         available = response.xpath('//tr[9]//a//@href').extract()
 
-        if available:
+        # Ensures that survey is available and it is a credit survey
+        if available and '$' not in abstract_text:
             yield Request('https://wlu-ls.sona-systems.com/' + available[0], callback=self.timeslot_sign_up)
 
     def timeslot_sign_up(self,response):
         button_text = response.xpath('//tr//td[3]//a/text()').extract()[0]
         if button_text == 'Sign Up ':
+            open_in_browser(response)
+
             client = Client(twilio_sid, twilio_token)
 
             for phone_number in phone_numbers:

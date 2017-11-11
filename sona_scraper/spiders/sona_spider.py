@@ -48,7 +48,6 @@ class SonaSpider(scrapy.Spider):
 
         # Ensures that survey is available and it is a credit survey
         if available and '$' not in abstract_text:
-            open_in_browser(response)
             print available[0]
             yield Request('https://wlu-ls.sona-systems.com/' + available[0], callback=self.timeslot_sign_up)
 
